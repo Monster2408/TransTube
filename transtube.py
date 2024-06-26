@@ -32,7 +32,7 @@ def get_cache_file():
     return user_cache_file
 
 EXE_NAME = 'TransTube'
-VERSION = '1.0.2'
+VERSION = '1.0.3'
 
 SELECT_MOV2MP4 = 'MOV to MP4'
 
