@@ -1,0 +1,2 @@
+[tool.poetry.group.dev.dependencies]
+pyinstaller = {version="^5.10", python="<3.12"}
