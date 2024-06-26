@@ -5,6 +5,8 @@ buttons/*
 test.json
 test.xml
 
+user/
+
 # 以下デフォルト
 # Byte-compiled / optimized / DLL files
 __pycache__/
