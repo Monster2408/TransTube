@@ -44,10 +44,13 @@ class WriteVideoProgress(proglog.ProgressBarLogger):
         self.progress.configure(value=float(progress_value))
         self.progress.update()
 
-def build(input_file, output_file):
+def build(root: tkinter.Tk, input_file, output_file):
 
-    root = tkinter.Tk()
-    root.title(u"TransTube - MOV to MP4")
+    progress_window = tkinter.Toplevel(root)
+    progress_window.title(u"TransTube - MOV to MP4")
+    progress_window.grab_set()
+    progress_window.focus_set()
+    progress_window.transient(master=root)
 
     # 動画情報を取得
     video_clip = VideoFileClip(input_file)
@@ -60,14 +63,17 @@ def build(input_file, output_file):
     duration = video_clip.duration
     print("video_clip.size:", width, height, rotation, fps, duration)
     
-    label = tkinter.Label(root, text="音声の読み込み中...")
+    label = tkinter.Label(progress_window, text="音声の読み込み中...")
     label.pack()
 
     # プログレスバー配置
-    progbar = ttk.Progressbar(root, length=400, mode="determinate", maximum=100)
+    progbar = ttk.Progressbar(progress_window, length=400, mode="determinate", maximum=100)
     progbar.pack(side=tkinter.LEFT)
 
-    cancel_button = tkinter.Button(root, text="キャンセル")
+    def cancel():
+        progress_window.destroy()
+
+    cancel_button = tkinter.Button(progress_window, text="キャンセル", command=cancel)
     cancel_button.pack(side=tkinter.RIGHT)
     
     progress_bar = ProgressBar(progbar, label, cancel_button, input_file, output_file)
@@ -78,4 +84,4 @@ def build(input_file, output_file):
         scale = f"scale={height}:{width}"
     video_clip.write_videofile(output_file, codec='libx264', ffmpeg_params=["-vf", scale], logger=WriteVideoProgress(progress_bar))
 
-    root.mainloop()
+    root.wait_window(progress_window)

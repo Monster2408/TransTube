@@ -41,7 +41,6 @@ if __name__ == '__main__':
     root = tkinter.Tk()
     root.title(EXE_NAME)
     iconfile = resourcePath('resources\\favicon.ico')
-    root.iconbitmap(default=iconfile)
     
     menu=tkinter.Menu(root)
     #個別のmenuを作る
@@ -108,7 +107,7 @@ if __name__ == '__main__':
         if type_text == SELECT_MOV2MP4:
             output_file = EditBox.get().replace('.mov', '.mp4')
             output_file = output_file.replace('.MOV', '.mp4')
-            mov2mp4.build(input_file, output_file)
+            mov2mp4.build(root, input_file, output_file)
         else:
             messagebox.showwarning(EXE_NAME, '変換形式を選択してください。')
     
