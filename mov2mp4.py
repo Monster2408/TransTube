@@ -5,10 +5,12 @@ import tkinter
 import tkinter.ttk as ttk
 
 class ProgressBar():
-    def __init__(self, progress_bar: ttk.Progressbar, log_label: tkinter.Label, cancel_button: tkinter.Button):
+    def __init__(self, progress_bar: ttk.Progressbar, log_label: tkinter.Label, cancel_button: tkinter.Button, input_file: str, output_file: str):
         self.progress_bar = progress_bar
         self.log_label = log_label
         self.cancel_button = cancel_button
+        self.input_file = input_file
+        self.output_file = output_file
 
 class WriteVideoProgress(proglog.ProgressBarLogger):
     def __init__(self, progress_bar: ProgressBar, *args, **kwargs):
@@ -17,6 +19,8 @@ class WriteVideoProgress(proglog.ProgressBarLogger):
         self.log_label = progress_bar.log_label
         self.cancel_button = progress_bar.cancel_button
         self.reading_audio = False
+        self.input_file = progress_bar.input_file
+        self.output_file = progress_bar.output_file
 
     def callback(self, *_, **__):
         pass
@@ -32,7 +36,7 @@ class WriteVideoProgress(proglog.ProgressBarLogger):
         else:
             msg = "\n動画の書き出し中...  {}/{}".format(value, total)
             if value == total:
-                msg = "完了しました！"
+                msg = "完了しました！\n" + self.output_file
                 progress_value = 100
                 self.cancel_button["text"] = "閉じる"
         self.log_label["text"] = msg
@@ -66,7 +70,7 @@ def build(input_file, output_file):
     cancel_button = tkinter.Button(root, text="キャンセル")
     cancel_button.pack(side=tkinter.RIGHT)
     
-    progress_bar = ProgressBar(progbar, label, cancel_button)
+    progress_bar = ProgressBar(progbar, label, cancel_button, input_file, output_file)
 
     # MOV動画をMP4に変換して保存
     scale = f"scale={width}:{height}"

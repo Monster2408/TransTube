@@ -5,6 +5,7 @@ import tkinter.ttk as ttk
 from tkinter import messagebox
 import sys
 import os
+from pathlib import Path
 
 import mov2mp4
 
@@ -13,8 +14,11 @@ def resourcePath(filename):
         return os.path.join(sys._MEIPASS, filename)
     return os.path.join(filename)
 
+def get_exe_dir():
+    return os.path.dirname(sys.argv[0])
+
 def get_user_dir():
-    iDir = os.path.abspath(os.path.dirname(__file__))
+    iDir = get_exe_dir()
     user_dir = os.path.join(iDir, 'user')
     if not os.path.exists(user_dir):
         os.makedirs(user_dir)
@@ -22,10 +26,13 @@ def get_user_dir():
 
 def get_cache_file():
     user_cache_file = os.path.join(get_user_dir(), 'cache.txt')
+    if not os.path.exists(user_cache_file):
+        with open(user_cache_file, 'w') as f:
+            f.write('')
     return user_cache_file
 
 EXE_NAME = 'TransTube'
-VERSION = '1.0.1'
+VERSION = '1.0.2'
 
 SELECT_MOV2MP4 = 'MOV to MP4'
 
@@ -69,12 +76,11 @@ if __name__ == '__main__':
         if os.path.exists(EditBox.get()):
             iDir = os.path.dirname(EditBox.get())
         else:
-            iDir = os.path.abspath(os.path.dirname(__file__))
+            iDir = Path(__file__).parent
         file = tkinter.filedialog.askopenfilename(filetypes = fTyp,initialdir = iDir)
         EditBox.delete(0, tkinter.END)
         EditBox.insert(tkinter.END,file)
         
-        user_cache_file = get_cache_file()
         with open(user_cache_file, 'w') as f:
             f.write(file)
 
@@ -101,6 +107,7 @@ if __name__ == '__main__':
         input_file = input_file.replace('\\', '\\\\')
         if type_text == SELECT_MOV2MP4:
             output_file = EditBox.get().replace('.mov', '.mp4')
+            output_file = output_file.replace('.MOV', '.mp4')
             mov2mp4.build(input_file, output_file)
         else:
             messagebox.showwarning(EXE_NAME, '変換形式を選択してください。')
