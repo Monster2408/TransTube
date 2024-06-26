@@ -14,6 +14,7 @@ def resourcePath(filename):
     return os.path.join(filename)
 
 EXE_NAME = 'TransTube'
+VERSION = '1.0.0'
 
 SELECT_MOV2MP4 = 'MOV to MP4'
 
@@ -23,6 +24,17 @@ if __name__ == '__main__':
     root.title(EXE_NAME)
     iconfile = resourcePath('resources\\favicon.ico')
     root.iconbitmap(default=iconfile)
+    
+    menu=tkinter.Menu(root)
+    #個別のmenuを作る
+    menu_1=tkinter.Menu(menu,tearoff=False)
+    menu_1.add_command(label="終了",command=root.quit)
+    #menuを親menuに追加
+    menu.add_cascade(label="ファイル",menu=menu_1)
+    
+    menu_2=tkinter.Menu(menu,tearoff=False)
+    menu_2.add_command(label="バージョン情報",command=lambda: messagebox.showinfo(EXE_NAME, 'v' + VERSION))
+    menu.add_cascade(label="ヘルプ",menu=menu_2)
     
     #ラベル
     Static1 = tkinter.Label(text=u'変換元ファイル：')
@@ -69,4 +81,5 @@ if __name__ == '__main__':
     SelectFileButton.bind("<Button-1>",convert) 
     SelectFileButton.grid(row=2,column=2)
     
+    root["menu"]=menu
     root.mainloop()
